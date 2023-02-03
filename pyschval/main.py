@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Callable
 
 from saxonche import PySaxonProcessor
 
@@ -44,8 +44,12 @@ def create_schematron_stylesheet(isosch: str, xsl_path: str) -> str:
     return isosch
 
 
-def isoschematron_validate(files: list[str], relaxng: str) -> list[SchematronResult]:
-
+def isoschematron_validate(
+    files: list[str],
+    relaxng: str,
+    extract_rules: Callable[[str, str], str] = extract_schematron_from_relaxng,
+    create_schema: Callable[[str, str], str] = create_schematron_stylesheet,
+) -> list[SchematronResult]:
     from pathlib import Path
 
     if len(files) == 0:
@@ -62,11 +66,9 @@ def isoschematron_validate(files: list[str], relaxng: str) -> list[SchematronRes
         ),
     }
 
-    isosch = create_schematron_stylesheet(
-        extract_schematron_from_relaxng(
-            relaxng=relaxng, xsl_path=xslt_files["extract-sch"]
-        ),
-        xsl_path=xslt_files["schxslt"],
+    isosch = create_schema(
+        extract_rules(relaxng, xslt_files["extract-sch"]),
+        xslt_files["schxslt"],
     )
 
     results: list[SchematronResult] = []
