@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+from typing import Optional
+
+from saxonche import PySaxonProcessor
 
 
 @dataclass
@@ -20,10 +23,30 @@ class SchematronValidationFailedError(Exception):
         super().__init__("The schematron validation returned no results.")
 
 
-def isoschematron_validate(files: list[str], relaxng: str) -> list[SchematronResult]:
-    from pathlib import Path
+def extract_schematron_from_relaxng(relaxng: str, xsl_path: str) -> str:
+    with PySaxonProcessor(license=False) as proc:
+        xsltproc = proc.new_xslt30_processor()
+        relaxng = proc.parse_xml(xml_text=relaxng)
+        xsl = xsltproc.compile_stylesheet(stylesheet_file=xsl_path)
+        isosch = xsl.transform_to_string(xdm_node=relaxng)
 
-    from saxonche import PySaxonProcessor
+    return isosch
+
+
+def create_schematron_stylesheet(isosch: str, xsl_path: str) -> str:
+    with PySaxonProcessor(license=False) as proc:
+        xsltproc = proc.new_xslt30_processor()
+        xsl = xsltproc.compile_stylesheet(
+            stylesheet_file=xsl_path,
+        )
+        isosch = xsl.transform_to_string(xdm_node=proc.parse_xml(xml_text=isosch))
+
+    return isosch
+
+
+def isoschematron_validate(files: list[str], relaxng: str) -> list[SchematronResult]:
+
+    from pathlib import Path
 
     if len(files) == 0:
         raise ValueError("No files to validate")
@@ -39,28 +62,24 @@ def isoschematron_validate(files: list[str], relaxng: str) -> list[SchematronRes
         ),
     }
 
+    isosch = create_schematron_stylesheet(
+        extract_schematron_from_relaxng(
+            relaxng=relaxng, xsl_path=xslt_files["extract-sch"]
+        ),
+        xsl_path=xslt_files["schxslt"],
+    )
+
     results: list[SchematronResult] = []
 
     with PySaxonProcessor(license=False) as proc:
         xsltproc = proc.new_xslt30_processor()
-        """ Step 1: Extract the schematron from the RelaxNG"""
-        relaxng = proc.parse_xml(xml_text=relaxng)
-        xsl = xsltproc.compile_stylesheet(stylesheet_file=xslt_files["extract-sch"])
-        isosch = xsl.transform_to_string(xdm_node=relaxng)
-        """ Step 2: Create the schematron stylesheet"""
-        xsl = xsltproc.compile_stylesheet(
-            stylesheet_file=xslt_files["schxslt"],
-        )
-        isosch = xsl.transform_to_string(xdm_node=proc.parse_xml(xml_text=isosch))
         xsl = xsltproc.compile_stylesheet(stylesheet_text=isosch)
-        """ Step 3: Validate the files"""
+
         for file in files:
             xml = proc.parse_xml(xml_file_name=file)
             report = xsl.transform_to_string(xdm_node=xml)
             if report is not None:
                 results.append(SchematronResult(file=file, report=report))
-
-    results = list(filter(None, results))
 
     if len(results) == 0:
         raise SchematronValidationFailedError()
