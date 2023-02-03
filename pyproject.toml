@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "pyschval"
+version = "0.1.0"
+description = "A python based wrapper around saxon and schxslt"
+authors = ["Bpolitycki <bastian.politycki@unisg.ch>"]
+#readme = "README.md"
+packages = [{include = "pyschval"}]
+include = [
+    {path = "xslt/schxslt/core/src/main/resources/xslt/2.0" , format = ["sdist", "wheel"]},
+    {path = "xslt/*.xsl" , format = ["sdist", "wheel"]}
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+saxonche = "^12.0.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+ruff = "^0.0.240"
+pyright = "^1.1.292"
+
+[tool.pyright]
+include = ["*.py"]
+exclude = ["**/__pycache__"]
+reportMissingImports = true
+
+[tool.ruff]
+select = ["E", "F", "I001"]
+ignore = ["E501"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

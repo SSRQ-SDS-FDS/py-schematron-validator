@@ -1,0 +1,3 @@
+[submodule "xslt/schxslt"]
+	path = xslt/schxslt
+	url = https://github.com/schxslt/schxslt.git
