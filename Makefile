@@ -22,6 +22,10 @@ lint:
 	@echo "Linting using ruff..."
 	@poetry run ruff .
 
+test:
+	@echo "Running tests..."
+	@poetry run pytest
+
 type-check:
 	@echo "Checking types using pyright..."
 	@poetry run pyright
