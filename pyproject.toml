@@ -3,7 +3,7 @@ name = "pyschval"
 version = "0.1.0"
 description = "A python based wrapper around saxon and schxslt"
 authors = ["Bpolitycki <bastian.politycki@unisg.ch>"]
-#readme = "README.md"
+readme = "README.md"
 packages = [{include = "pyschval"}]
 include = [
     {path = "xslt/schxslt/core/src/main/resources/xslt/2.0",  format = ["sdist", "wheel"]},
