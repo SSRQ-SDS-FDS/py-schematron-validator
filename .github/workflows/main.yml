@@ -1,0 +1,35 @@
+name: pyschval CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    strategy:
+       fail-fast: false
+       matrix:
+        python-version: ["3.11"]
+        poetry-version: ["1.2.2"]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dagger-io
+      run: pip install dagger-io
+    - name: Run tests using dagger
+      run: python test.py

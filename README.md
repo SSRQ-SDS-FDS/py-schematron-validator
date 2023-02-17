@@ -1,7 +1,6 @@
 # PYSCHVAL [piː-waɪ-ɛs-siː-eɪʧ-viː-eɪ-ɛl]
 
-[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
-
+![CI](https://github.com/SSRQ-SDS-FDS/py-schematron-validator/actions/workflows/main.yml/badge.svg)
 
 To validate XML-files against a given schema (RELAXNG) it's a common practice to use schematron-rules for further validation tasks. This rules are often embedded in the schema. This python package is a small wrapper around [SchXSLT](https://github.com/schxslt/schxslt) and enables schematron validation in python using [SaxonC HE](https://pypi.org/project/saxonche/).
 
