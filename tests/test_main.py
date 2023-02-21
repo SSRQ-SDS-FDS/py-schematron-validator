@@ -7,6 +7,7 @@ from pyschval.main import (
     SchematronResult,
     extract_schematron_from_relaxng,
     isoschematron_validate,
+    isoschematron_validate_async,
 )
 
 xslt_path = Path(Path(__file__).parent.parent / "xslt").resolve()
@@ -72,6 +73,16 @@ def test_extract_schematron_from_relaxng(schema_data):
 def test_isoschematron_validate_valid_input(schema_data, xml):
     files = [xml]
     results = isoschematron_validate(files, schema_data[1])
+    assert isinstance(results, list)
+    assert all(isinstance(result, SchematronResult) for result in results)
+    assert all(result.is_valid() for result in results)
+
+
+def test_isoschematron_validate_async_valid_input(schema_data, xml):
+    from asyncio import run
+
+    files = [xml]
+    results = run(isoschematron_validate_async(files, schema_data[1]))
     assert isinstance(results, list)
     assert all(isinstance(result, SchematronResult) for result in results)
     assert all(result.is_valid() for result in results)
