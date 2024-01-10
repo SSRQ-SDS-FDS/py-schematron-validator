@@ -1,24 +1,9 @@
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Callable, Iterator
+from typing import Callable
 
 from saxonche import PySaxonProcessor
 
-XSLT_PATH = Path(Path(__file__).parent.parent / "xslt").resolve()
-XSLT_FILES = {
-    "extract-sch": str(Path(XSLT_PATH, "extract_sch.xsl").resolve()),
-    "schxslt": str(
-        Path(
-            XSLT_PATH,
-            "schxslt/core/src/main/resources/xslt/2.0/pipeline-for-svrl.xsl",
-        ).resolve()
-    ),
-}
-
-
-def partition(data: list[str], size: int) -> Iterator[list[str]]:
-    for i in range(0, len(data), size):
-        yield data[i : i + size]
+from pyschval import config, utils
 
 
 @dataclass
@@ -86,8 +71,8 @@ def isoschematron_validate(
         raise ValueError("No files to validate")
 
     isosch = create_schema(
-        extract_rules(relaxng, XSLT_FILES["extract-sch"]),
-        XSLT_FILES["schxslt"],
+        extract_rules(relaxng, str(config.XSLT_FILES["extract-sch"])),
+        str(config.XSLT_FILES["schxslt"]),
     )
 
     results: list[SchematronResult] = []
@@ -115,8 +100,8 @@ async def isoschematron_validate_async(
         raise ValueError("No files to validate")
 
     isosch = create_schema(
-        extract_rules(relaxng, XSLT_FILES["extract-sch"]),
-        XSLT_FILES["schxslt"],
+        extract_rules(relaxng, str(config.XSLT_FILES["extract-sch"])),
+        str(config.XSLT_FILES["schxslt"]),
     )
 
     results: list[SchematronResult] = []
@@ -125,7 +110,7 @@ async def isoschematron_validate_async(
     cpus = cpu_count()
     len_files = len(files)
     with ProcessPoolExecutor() as pool:
-        for files in partition(
+        for files in utils.partition(
             files,
             len_files
             if len_files == 1
