@@ -11,12 +11,12 @@ build:
 .PHONY: fmt test
 
 fmt:
-	@poetry run black .
+	@poetry run ruff format .
 	@poetry run ruff --fix  .
 
 fmt-check:
-	@echo "Checking formatting using black..."
-	@poetry run black --check .
+	@echo "Checking formatting using ruff..."
+	@poetry run ruff format --check .
 
 lint:
 	@echo "Linting using ruff..."
