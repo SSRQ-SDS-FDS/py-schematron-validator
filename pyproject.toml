@@ -19,12 +19,14 @@ include = [
 [tool.poetry.dependencies]
 python = "^3.9"
 saxonche = "^12.4.0"
+parsel = "^1.8.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.11"
 pyright = "^1.1.292"
 pytest = "^7.2.1"
 testfixtures = "^7.0.4"
+saxonche-stubs = "^0.6.0"
 
 [tool.pyright]
 include = ["*.py"]
