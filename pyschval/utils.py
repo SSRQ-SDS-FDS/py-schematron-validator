@@ -1,7 +1,7 @@
-from __future__ import annotations
-
 from pathlib import Path
-from typing import Iterator
+from typing import Iterator, TypeVar
+
+T = TypeVar("T")
 
 
 def is_file_and_exists(file: str | Path) -> bool:
@@ -17,7 +17,7 @@ def is_file_and_exists(file: str | Path) -> bool:
     return file.is_file() and file.exists()
 
 
-def partition[T](data: list[T], size: int) -> Iterator[list[T]]:
+def partition(data: list[T], size: int) -> Iterator[list[T]]:
     """Partition a list into chunks of size `size`.
 
     Args:
