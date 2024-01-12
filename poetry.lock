@@ -340,22 +340,6 @@ testing = ["build[virtualenv]", "filelock (>=3.4.0)", "flake8-2020", "ini2toml[l
 testing-integration = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "packaging (>=23.1)", "pytest", "pytest-enabler", "pytest-xdist", "tomli", "virtualenv (>=13.0.0)", "wheel"]
 
 [[package]]
-name = "testfixtures"
-version = "7.2.2"
-description = "A collection of helpers and mock objects for unit tests and doc tests."
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "testfixtures-7.2.2-py3-none-any.whl", hash = "sha256:c72adaf9c7b06882b0ea379dd8159422ca2be0205eedc7c3fee0074cd32f45fa"},
-    {file = "testfixtures-7.2.2.tar.gz", hash = "sha256:80774aecb0249458275ab783f53093fbe75795ff2b3218d22ce3fff0a12c4da6"},
-]
-
-[package.extras]
-build = ["setuptools-git", "twine", "wheel"]
-docs = ["django", "furo", "sphinx", "sybil (>=3)", "twisted", "zope.component"]
-test = ["django", "mypy", "pytest (>=3.6)", "pytest-cov", "pytest-django", "sybil (>=3)", "twisted", "zope.component"]
-
-[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -380,4 +364,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "4e1ab379b4e3641b35fd1deb15572ebef3cc49f89503d7352dafc5539eebf5a7"
+content-hash = "f01fa2b67b489b27a2d20c0beddeb76e24f04130559a17683ec7b13f4e8605b5"
