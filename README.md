@@ -29,7 +29,7 @@ if __name__ == "__main__":
     validate()
 ```
 
-`isoschematron_validate` is the main function to perform the validation. As a first arguments it excepts a list of filenames and the relaxng-schema as a string. The package is fully typed for ease of use.
+`isoschematron_validate` is the main function to perform the validation. As a first arguments it excepts a list of filenames or direct xml-input (as strings) and the relaxng-schema as a string. The package is fully typed for ease of use. The returned `SchematronResult` allows you to check if the validation was successful and to get the error messages. For more details see the [validation module](./pyschval/schematron/validate.py).
 
 ## Author
 
