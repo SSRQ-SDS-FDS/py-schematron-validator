@@ -33,8 +33,7 @@ class SchematronError:
 
         if isinstance(role, str):
             self.role = Role._member_map_.get(role.upper(), None)  # type: ignore
-
-        if self.role is None:
+        else:
             self.role = None
 
     def __get_text(self, failed_assert: selector.Selector):
