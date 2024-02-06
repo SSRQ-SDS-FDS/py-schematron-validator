@@ -13,8 +13,11 @@ def is_file_and_exists(file: str | Path) -> bool:
     Returns:
         bool: True if `file` is a file and exists, False otherwise.
     """
-    file = Path(file)
-    return file.is_file() and file.exists()
+    try:
+        file = Path(file)
+        return file.is_file() and file.exists()
+    except OSError:
+        return False
 
 
 def partition(data: list[T], size: int) -> Iterator[list[T]]:

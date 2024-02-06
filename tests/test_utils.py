@@ -12,9 +12,14 @@ def tmp_file(tmp_path: Path) -> Path:
     return file
 
 
-def test_is_file(tmp_file: Path, tmp_path: Path):
+def test_is_file_against_file_like(tmp_file: Path, tmp_path: Path):
     assert is_file_and_exists(tmp_file) is True
     assert is_file_and_exists(f"{tmp_path}/bar.py") is False
+
+
+def test_is_file_against_xml_str_input(tmp_file: Path, tmp_path: Path):
+    xml_input = f"<foo>{''.join([f'<bar>{i}</bar>' for i in range(1000)])}</foo>"
+    assert is_file_and_exists(xml_input) is False
 
 
 @pytest.mark.parametrize(
