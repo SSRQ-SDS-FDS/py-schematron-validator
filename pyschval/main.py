@@ -40,7 +40,7 @@ def isoschematron_validate(
     return validate.apply_schematron_validation(input, isosch)
 
 
-async def isoschematron_validate_async(
+def isoschematron_validate_mp(
     input: list[str | Path],
     relaxng: str,
     extract_rules: Callable[
@@ -48,7 +48,7 @@ async def isoschematron_validate_async(
     ] = extract.extract_schematron_from_relaxng,
     create_schema: Callable[[str, str], str] = create.create_schematron_stylesheet,
 ) -> list[result.SchematronResult]:
-    """Validate the input files with the schematron rules. Async version – running in a separate process.
+    """Validate the input files with the schematron rules. Multiprocessing version – running in multiple processes.
 
     Args:
         input (list[str]): The input files.
@@ -63,7 +63,7 @@ async def isoschematron_validate_async(
     Returns:
         list[SchematronResult]: The list of results.
     """
-    from asyncio import gather, get_running_loop
+    from asyncio import gather, get_running_loop, run
     from concurrent.futures import ProcessPoolExecutor
     from functools import partial
     from os import cpu_count
@@ -76,27 +76,31 @@ async def isoschematron_validate_async(
         str(config.XSLT_FILES["schxslt"]),
     )
 
-    results: list[result.SchematronResult] = []
-    loop = get_running_loop()
-    tasks = []
-    cpus = cpu_count()
-    len_files = len(input)
-    with ProcessPoolExecutor() as pool:
-        for files in utils.partition(
-            input,
-            len_files
-            if len_files == 1
-            else (len_files if cpus is None else int(len_files / cpus)),
-        ):
-            tasks.append(
-                loop.run_in_executor(
-                    pool,
-                    partial(
-                        validate.apply_schematron_validation, input=files, isosch=isosch
-                    ),
+    async def _validate():
+        loop = get_running_loop()
+        tasks = []
+        cpus = cpu_count()
+        len_files = len(input)
+        with ProcessPoolExecutor() as pool:
+            for files in utils.partition(
+                input,
+                len_files
+                if len_files == 1
+                else (len_files if cpus is None else int(len_files / cpus)),
+            ):
+                tasks.append(
+                    loop.run_in_executor(
+                        pool,
+                        partial(
+                            validate.apply_schematron_validation,
+                            input=files,
+                            isosch=isosch,
+                        ),
+                    )
                 )
+            intermediate_results: list[list[result.SchematronResult]] = await gather(
+                *tasks
             )
-        intermediate_results: list[list[result.SchematronResult]] = await gather(*tasks)
-        results = [result for chunk in intermediate_results for result in chunk]
+            return [result for chunk in intermediate_results for result in chunk]
 
-    return results
+    return run(_validate())
