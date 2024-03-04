@@ -2,7 +2,7 @@ import pytest
 
 from pyschval.main import (
     isoschematron_validate,
-    isoschematron_validate_async,
+    isoschematron_validate_mp,
 )
 from pyschval.types import result
 
@@ -14,10 +14,8 @@ def test_isoschematron_validate_valid_input(schema: str, xml: str):
     assert all(r.report.is_valid(all_error_types=False) for r in validation_results)
 
 
-def test_isoschematron_validate_async_valid_input(schema: str, xml: str):
-    from asyncio import run
-
-    validation_results = run(isoschematron_validate_async([xml], schema))
+def test_isoschematron_validate_mp_valid_input(schema: str, xml: str):
+    validation_results = isoschematron_validate_mp([xml], schema)
     assert isinstance(validation_results, list)
     assert all(isinstance(r, result.SchematronResult) for r in validation_results)
     assert all(r.report.is_valid(all_error_types=False) for r in validation_results)
