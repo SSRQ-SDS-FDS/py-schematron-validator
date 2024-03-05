@@ -32,7 +32,11 @@ class SchematronError:
         role = failed_assert.attrib.get("role")
 
         if isinstance(role, str):
-            self.role = Role._member_map_.get(role.upper(), None)  # type: ignore
+            match role.upper():
+                case "WARNING":  # for broader compatibility
+                    self.role = Role.WARN
+                case _:
+                    self.role = Role._member_map_.get(role.upper(), None)  # type: ignore
         else:
             self.role = None
 
