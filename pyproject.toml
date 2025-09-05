@@ -5,7 +5,7 @@ description = "A python based wrapper around saxon and schxslt"
 authors = [{ name = "Bastian Politycki", email = "bastian.politycki@unisg.ch" }]
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
-dependencies = ["saxonche >=12.4.0", "parsel >= 1.8.1"]
+dependencies = ["saxonche >=12.8.0", "parsel >= 1.10.0"]
 
 [dependency-groups]
 dev = [
