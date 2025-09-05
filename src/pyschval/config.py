@@ -1,6 +1,6 @@
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).parent
 XSLT_PATH = (PROJECT_ROOT / "xslt").resolve()
 XSLT_FILES = {
     "extract-sch": Path(XSLT_PATH, "extract_sch.xsl").resolve(),

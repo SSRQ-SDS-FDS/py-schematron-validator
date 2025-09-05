@@ -1,31 +1,23 @@
-[tool.poetry]
+[project]
 name = "pyschval"
 version = "1.1.1"
 description = "A python based wrapper around saxon and schxslt"
-authors = ["Bpolitycki <bastian.politycki@unisg.ch>"]
+authors = [{ name = "Bastian Politycki", email = "bastian.politycki@unisg.ch" }]
 readme = "README.md"
-packages = [{ include = "pyschval" }]
-include = [
-    { path = "xslt/schxslt/core/src/main/resources/xslt/2.0", format = [
-        "sdist",
-        "wheel",
-    ] },
-    { path = "xslt/*.xsl", format = [
-        "sdist",
-        "wheel",
-    ] },
+requires-python = ">=3.10,<3.13"
+dependencies = ["saxonche >=12.4.0", "parsel >= 1.8.1"]
+
+[dependency-groups]
+dev = [
+    "ruff >= 0.1.11",
+    "pyright >= 1.1.292",
+    "pytest >= 7.2.1",
+    "saxonche-stubs >= 0.6.0",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-saxonche = "^12.4.0"
-parsel = "^1.8.1"
-
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.1.11"
-pyright = "^1.1.292"
-pytest = "^7.2.1"
-saxonche-stubs = "^0.6.0"
+[build-system]
+build-backend = 'hatchling.build'
+requires = ['hatchling']
 
 [tool.pyright]
 include = ["*.py"]
@@ -33,9 +25,8 @@ exclude = ["**/__pycache__"]
 reportMissingImports = true
 
 [tool.ruff]
+fix = true
+
+[tool.ruff.lint]
 select = ["E", "F", "I001"]
 ignore = ["E501"]
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"

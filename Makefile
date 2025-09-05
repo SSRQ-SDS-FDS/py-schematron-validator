@@ -2,30 +2,30 @@ EXECUTABLES = poetry
 require := $(foreach exec,$(EXECUTABLES),\
         		$(if $(shell which $(exec)),some string,$(error "No $(exec) in PATH")))
 
-all: type-check build
+all: type-check test build
 
 build:
-	@poetry build
+	@uv build
 
 # PHONY targets
 .PHONY: fmt test
 
 fmt:
-	@poetry run ruff format .
-	@poetry run ruff --fix  .
+	@uv run ruff format .
+	@uv run ruff --fix  .
 
 fmt-check:
 	@echo "Checking formatting using ruff..."
-	@poetry run ruff format --check .
+	@uv run ruff format --check .
 
 lint:
 	@echo "Linting using ruff..."
-	@poetry run ruff .
+	@uv run ruff .
 
 test:
 	@echo "Running tests..."
-	@poetry run pytest
+	@uv run pytest
 
 type-check:
 	@echo "Checking types using pyright..."
-	@poetry run pyright
+	@uv run pyright
